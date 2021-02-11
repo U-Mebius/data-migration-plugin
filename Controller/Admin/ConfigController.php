@@ -393,6 +393,7 @@ class ConfigController extends AbstractController
                 $this->saveToP($em, $csvDir, 'dtb_product_category');
                 $this->saveToP($em, $csvDir, 'dtb_product_stock');
                 $this->saveToP($em, $csvDir, 'dtb_product_image');
+                $this->saveToP($em, $csvDir, 'dtb_customer_favorite_product');
                 $this->saveToP($em, $csvDir, 'dtb_product_tag');
                 $this->saveToP($em, $csvDir, 'mtb_tag', 'dtb_tag');
 
@@ -446,6 +447,7 @@ class ConfigController extends AbstractController
                 $this->setIdSeq($em, 'dtb_category');
                 $this->setIdSeq($em, 'dtb_product_stock');
                 $this->setIdSeq($em, 'dtb_product_image');
+                $this->setIdSeq($em, 'dtb_customer_favorite_product');
                 $this->setIdSeq($em, 'dtb_product_tag');
                 $this->setIdSeq($em, 'dtb_tag');
             }
