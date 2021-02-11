@@ -172,6 +172,7 @@ class ConfigController extends AbstractController
                     'rounding_type_id' => $tax_rule['rounding_type_id'],
                     'tax_rate' => $tax_rule['tax_rate'],
                     'apply_date' => $tax_rule['apply_date'],
+                    'del_flg' => $tax_rule['del_flg'],
                 ];
             }
             $this->saveOrderItem($em);
@@ -1420,6 +1421,7 @@ class ConfigController extends AbstractController
                                 'rounding_type_id' => $value['rounding_type_id'],
                                 'tax_rate' => $data['tax_rate'],
                                 'apply_date' => $value['apply_date'],
+                                'del_flg' => $data['del_flg'],
                             ];
                         }
                         krsort($this->tax_rule);
@@ -1534,7 +1536,7 @@ class ConfigController extends AbstractController
         $batchSize = 20;
         foreach ($this->order_item as $order_id => $type) {
             foreach ($type as $key => $value) {
-                $tax_rule = $this->getTaxRule($value['order_date']);
+                $tax_rule = $this->getTaxRule($value['order_date'], false);
                 $data['tax_rate'] = $tax_rule['tax_rate'];
                 $data['rounding_type_id'] = $tax_rule['rounding_type_id'];
                 $data['shipping_id'] = null;
@@ -1637,9 +1639,15 @@ class ConfigController extends AbstractController
         return $date->format($this->em->getDatabasePlatform()->getDateTimeTzFormatString());
     }
 
-    private function getTaxRule($order_date)
+    private function getTaxRule($order_date, $includeDeleted = true)
     {
         foreach ($this->tax_rule as $apply_date => $value) {
+
+            if (!$includeDeleted && $value['del_flg'] == '1') {
+                // 論理削除されている税率を使用しない
+                continue;
+            }
+
             if ($apply_date < $order_date) {
                 return $value;
             }
